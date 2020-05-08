@@ -55,7 +55,7 @@ screenshort:
 ![](images/Screenshot%202020-05-08%20at%202.10.41%20PM.png)
 
 Ignore below:
-screenshort:
+
 <h2>Example of code</h2>
 <pre>
     <div class="container">
