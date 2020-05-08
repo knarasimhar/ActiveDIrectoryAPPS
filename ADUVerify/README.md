@@ -1,9 +1,9 @@
-ADUVerify application is userd for AD user Creaete/Login validate /List of all users
+ADUVerify application is userd for windows AD(Active directory) user Creaete/Login validate /List of all users
 
 prerequisesions:
-windows NT server
-.net framework 4.5 above
-IIS 7
+windows NT server,
+.net framework 4.5 above,
+IIS 7,
 Activedirectory initialize
 
 Link as below :\ http://<ip>/aduverify
@@ -13,13 +13,13 @@ screenshort:
 
 Below are the Link details:
 
-API 1 : For list all users from Active directory 
+<b>API 1</b> : For list all users from Active directory 
 
 screenshort:
 
 ![](images/Screenshot%202020-05-08%20at%202.08.26%20PM.png)
 
-API 2 : For validate the respective AD[active directory]  user  
+<b>API 2</b>: For validate the respective AD[active directory]  user  
 
 Plz pass paramerters to this url like : [domainurl]/ValidateADUser?uname=xxxx&pwd=xxxx
 
@@ -34,7 +34,7 @@ True is for success/False is for not valid/active
 screenshort:
 ![](images/Screenshot%202020-05-08%20at%202.10.11%20PM.png)
 
-API 3 : For creating user in remote windows NT server  Active directory 
+<b>API 3</b>: For creating user in remote windows NT server  Active directory 
 
 Plz pass paramerters to this url like : [domainurl]/CreateADUser?ou=&dc=&_dc&uname=xxxx&pwd=xxxx
 
