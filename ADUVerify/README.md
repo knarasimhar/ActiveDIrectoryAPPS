@@ -10,7 +10,46 @@ Link as below :\ http://<ip>/aduverify
 
 screen short as below:
 
+Below are the Link details:
 
+API 1 : For list all users from Active directory 
+
+screenshort:
+
+![](images/Screenshot%202020-05-08%20at%202.08.26%20PM.png)
+
+API 2 : For validate the respective AD[active directory]  user  
+
+Plz pass paramerters to this url like : [domainurl]/ValidateADUser?uname=xxxx&pwd=xxxx
+
+parameter:
+uname: pass the windows AD[active directory] user name
+pwd: pass the windows AD[active directory] password
+
+result:
+
+True is for success/False is for not valid/active
+
+screenshort:
+API 3 : For creating user in remote windows NT server  Active directory 
+
+Plz pass paramerters to this url like : [domainurl]/CreateADUser?ou=&dc=&_dc&uname=xxxx&pwd=xxxx
+
+parameter:
+
+ou: pass empty value
+dc: pass empty value
+uname: pass the windows AD[active directory] user name
+pwd: pass the windows AD[active directory] password
+
+result:
+
+Windows server will give respective output base on username and password
+
+note: Password policy should follow as windows authentication [one cap letter and lengh should be more 8 chars]
+
+Ignore below:
+screenshort:
 <h2>Example of code</h2>
 <pre>
     <div class="container">
