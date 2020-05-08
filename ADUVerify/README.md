@@ -6,7 +6,7 @@ windows NT server,
 IIS 7,
 Activedirectory initialize
 
-Link as below : http://<doaminip>/aduverify
+Link as below : http://[domainurl]/aduverify
 
 screenshort:
 ![](images/Screenshot%202020-05-08%20at%201.55.13%20PM.png)
@@ -15,7 +15,7 @@ Below are the Link details:
 
 <b>API 1</b> : For list all users from Active directory 
 
-Url as : http://<domainip>/ADUVerify/Home/ListADUsers
+Url as : http://[domainurl]/ADUVerify/Home/ListADUsers
 
 screenshort:
 
