@@ -6,7 +6,7 @@ windows NT server,
 IIS 7,
 Activedirectory initialize
 
-Link as below :\ http://<ip>/aduverify
+Link as below : http://<doaminip>/aduverify
 
 screenshort:
 ![](images/Screenshot%202020-05-08%20at%201.55.13%20PM.png)
@@ -62,7 +62,7 @@ screenshort:
         <div class="block two first">
             <h2>Your title</h2>
             <div class="wrap">
-            //Your content
+            //Narasimha content
             </div>
         </div>
     </div>
