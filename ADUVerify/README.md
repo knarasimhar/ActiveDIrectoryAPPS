@@ -15,6 +15,8 @@ Below are the Link details:
 
 <b>API 1</b> : For list all users from Active directory 
 
+Url as : http://<domainip>/ADUVerify/Home/ListADUsers
+
 screenshort:
 
 ![](images/Screenshot%202020-05-08%20at%202.08.26%20PM.png)
