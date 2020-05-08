@@ -1,6 +1,6 @@
-ADUVerify application is userd for windows AD(Active directory) user Creaete/Login validate /List of all users
+ADUVerify application is userd for windows AD(Active directory) user List/Login validate/Creaete windows users
 
-prerequisesions:
+<b>prerequisesions</b>:
 windows NT server,
 .net framework 4.5 above,
 IIS 7,
