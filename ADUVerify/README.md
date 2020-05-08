@@ -8,7 +8,8 @@ Activedirectory initialize
 
 Link as below :\ http://<ip>/aduverify
 
-screen short as below:
+screenshort:
+![](images/Screenshot%202020-05-08%20at%201.55.13%20PM.png)
 
 Below are the Link details:
 
@@ -31,6 +32,8 @@ result:
 True is for success/False is for not valid/active
 
 screenshort:
+![](images/Screenshot%202020-05-08%20at%202.10.11%20PM.png)
+
 API 3 : For creating user in remote windows NT server  Active directory 
 
 Plz pass paramerters to this url like : [domainurl]/CreateADUser?ou=&dc=&_dc&uname=xxxx&pwd=xxxx
@@ -47,6 +50,9 @@ result:
 Windows server will give respective output base on username and password
 
 note: Password policy should follow as windows authentication [one cap letter and lengh should be more 8 chars]
+
+screenshort:
+![](images/Screenshot%202020-05-08%20at%202.10.41%20PM.png)
 
 Ignore below:
 screenshort:
