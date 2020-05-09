@@ -141,6 +141,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AdRoleModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -186,10 +187,12 @@
     <Content Include="Views\Home\getADGroupsByUser.cshtml" />
     <Content Include="Views\Home\SetADGroupsUser.cshtml" />
     <Content Include="Views\Home\ListADGroups.cshtml" />
+    <Content Include="Views\Home\getADPermissionsByUser.cshtml" />
+    <Content Include="Views\Home\GetAllRoles.cshtml" />
+    <Content Include="Views\Home\getADAccessRules.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

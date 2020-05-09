@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.DirectoryServices.AccountManagement;
 using System.DirectoryServices;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace ADUVerify.Controllers
 {
@@ -40,6 +42,7 @@ namespace ADUVerify.Controllers
                 try
                 {
                     DirectoryEntry childEntry = ouEntry.Children.Add("CN=" + Uname, "user");
+                
                     childEntry.CommitChanges();
                     ouEntry.CommitChanges();
                     childEntry.Invoke("SetPassword", new object[] { Pwd });
@@ -139,7 +142,7 @@ namespace ADUVerify.Controllers
             string Uname = "narasimha";
             if (Uname == null)
             {
-                ViewBag.Message = @"Plz pass paramerters to this url like : [domainurl]/getADGroupsByUser?uname=xxxx";
+               // ViewBag.Message = @"Plz pass paramerters to this url like : [domainurl]/getADGroupsByUser?uname=xxxx";
                 return View();
             }
 
@@ -352,5 +355,155 @@ namespace ADUVerify.Controllers
 
             return result;
         }
+
+        public ActionResult getADPermissionsByUser(string Uname)
+        {
+
+            if (Uname == null)
+            {
+                //ViewBag.Message = @"Plz pass paramerters to this url like : [domainurl]/getADPermissionsByUser?uname=xxxx";
+                return View();
+            }
+
+            try
+            {
+                ADUVerify.Models.AdRoleModel AdPobj = new ADUVerify.Models.AdRoleModel();
+
+                ViewBag.Message = AdPobj.GetRolesForUser(Uname);
+            }
+            catch { ViewBag.Message = "user not found"; }
+
+          
+       
+            return View();
+        }
+
+        public ActionResult GetAllRoles()
+        {
+
+            
+
+            try
+            {
+                ADUVerify.Models.AdRoleModel AdPobj = new ADUVerify.Models.AdRoleModel();
+
+                ViewBag.Message = AdPobj.GetAllRoles();
+            }
+            catch { ViewBag.Message = "not found"; }
+
+
+
+            return View();
+        }
+
+              public ActionResult getADAccessRules()
+        {
+            DirectoryEntry entry = new DirectoryEntry(
+            "LDAP://OU=hyderabad,DC=mylab,DC=local",
+            null,
+            null,
+            AuthenticationTypes.Secure
+            );
+           
+           
+                       //var sid = (SecurityIdentifier)user.ProviderUserKey;
+            ActiveDirectorySecurity sec = entry.ObjectSecurity;
+
+                //  PrintSD(sec);
+
+                try
+                {
+                // respective user 
+                PrincipalContext domainContext = new PrincipalContext(ContextType.Domain, "mylab.local");
+                GroupPrincipal user = GroupPrincipal.FindByIdentity(domainContext, "developer");
+                var sid = user.Sid;
+               
+                ViewBag.Message += "</br></br> SID: " + user.Sid.ToString();
+                NTAccount ntAccount = (NTAccount)sid.Translate(typeof(NTAccount));
+                foreach (ActiveDirectoryAccessRule rule in sec.GetAccessRules(true, false, typeof(NTAccount)))
+                {
+                    if (rule.ObjectType.ToString() == sid.ToString())
+                    {
+                        
+                        ViewBag.Message += "</br> Identity: " + rule.IdentityReference.ToString()
+                                       + "</br> AccessControlType: " + rule.AccessControlType.ToString()
+                                       + "</br> ActiveDirectoryRights: " + rule.ActiveDirectoryRights.ToString()
+                                       + "</br> InheritanceType: " + rule.InheritanceType.ToString()
+                                       + "</br> ObjectFlags: " + rule.ObjectFlags.ToString() + "</br>";
+                    }
+                }
+               // ViewBag.Message += sec.GetOwner(typeof(ntAccount));
+                //  ViewBag.Message += " Owner: " + sec.GetOwner(typeof(NTAccount("mylab.user", "user1")));
+                //  ViewBag.Message += " Group: " + sec.GetOwner(typeof(Account));
+            }
+                catch 
+                {
+
+                    //throw;
+                }
+
+                ViewBag.Message += "</br></br>=====Security Descriptor=====";
+                ViewBag.Message += " Owner: " + sec.GetOwner(typeof(NTAccount));
+                ViewBag.Message += " Group: " + sec.GetOwner(typeof(NTAccount));
+
+
+                AuthorizationRuleCollection rules = null;
+                rules = sec.GetAccessRules(true, true, typeof(NTAccount));
+
+                foreach (ActiveDirectoryAccessRule rule in rules)
+                {
+                    PrintAce(rule);
+                    ViewBag.Message += "</br> Identity: " + rule.IdentityReference.ToString()
+                                       + "</br> AccessControlType: " + rule.AccessControlType.ToString()
+                                       + "</br> ActiveDirectoryRights: " + rule.ActiveDirectoryRights.ToString()
+                                       + "</br> InheritanceType: " + rule.InheritanceType.ToString()
+                                       + "</br> ObjectFlags: " + rule.ObjectFlags.ToString() + "</br>"
+                                       +  "</br> ObjectType: " + rule.ObjectType.ToString() + "</br>";
+            }
+            
+            return View();
+        }
+
+        public static void PrintAce(ActiveDirectoryAccessRule rule)
+        {
+            Console.WriteLine("=====ACE=====");
+            Console.Write(" Identity: ");
+            Console.WriteLine(rule.IdentityReference.ToString());
+            Console.Write(" AccessControlType: ");
+            Console.WriteLine(rule.AccessControlType.ToString());
+            Console.Write(" ActiveDirectoryRights: ");
+            Console.WriteLine(
+            rule.ActiveDirectoryRights.ToString());
+            Console.Write(" InheritanceType: ");
+            Console.WriteLine(rule.InheritanceType.ToString());
+            Console.Write(" ObjectType: ");
+            if (rule.ObjectType == Guid.Empty)
+                Console.WriteLine("");
+            else
+                Console.WriteLine(rule.ObjectType.ToString());
+
+            Console.Write(" InheritedObjectType: ");
+            if (rule.InheritedObjectType == Guid.Empty)
+                Console.WriteLine("");
+            else
+                Console.WriteLine(
+                rule.InheritedObjectType.ToString());
+            Console.Write(" ObjectFlags: ");
+            Console.WriteLine(rule.ObjectFlags.ToString());
+        }
+
+        public static void PrintSD(ActiveDirectorySecurity sd)
+        {
+            Console.WriteLine("=====Security Descriptor=====");
+            Console.Write(" Owner: ");
+            Console.WriteLine(sd.GetOwner(typeof(NTAccount)));
+            Console.Write(" Group: ");
+            Console.WriteLine(sd.GetGroup(typeof(NTAccount)));
+        }
+
+
+
+
+
     }
 }

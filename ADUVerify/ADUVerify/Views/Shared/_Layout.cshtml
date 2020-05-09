@@ -22,11 +22,18 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("Users List", "ListADUsers", "Home")</li>
-                    <li>@Html.ActionLink("Uere Verification", "ValidateADUser", "Home")</li>
+                    <li>@Html.ActionLink("user Verification", "ValidateADUser", "Home")</li>
                     <li>@Html.ActionLink("User Creation", "CreateADUser", "Home")</li>
                     <li>@Html.ActionLink("User Groups", "getADGroupsByUser", "Home")</li>
                     <li>@Html.ActionLink("Create Group", "SetADGroupsUser", "Home")</li>
                     <li>@Html.ActionLink("List Groups", "ListADGroups", "Home")</li>
+                    <li>@Html.ActionLink("User permissions", "getADPermissionsByUser", "Home")</li>
+                    <li>@Html.ActionLink("Roles", "GetAllRoles", "Home")</li>
+                    <li>@Html.ActionLink("Access Rules", "getADAccessRules", "Home")</li>
+
+                    
+
+
 
                 </ul>
             </div>
