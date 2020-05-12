@@ -399,7 +399,7 @@ namespace ADUVerify.Controllers
               public ActionResult getADAccessRules()
         {
             DirectoryEntry entry = new DirectoryEntry(
-            "LDAP://OU=hyderabad,DC=mylab,DC=local",
+            "LDAP://OU=IT,OU=hyderabad,DC=mylab,DC=local",
             null,
             null,
             AuthenticationTypes.Secure
