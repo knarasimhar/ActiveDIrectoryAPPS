@@ -2,7 +2,38 @@
 @{
     ViewBag.Title = "ListADUsers";
 }
+<br />
+<br />
+<br />
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>Name</th>
+            <th>Email id</th>
+            <th>Mobile no</th>
+            <th>Department</th>
 
-<h3>@Html.Raw(ViewBag.Message)</h3>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.userlist)
+        {
+        <tr>
+            <th scope="row">@item.UserName</th>
+            <td> @item.FirstName</td>
+            <td>@item.Emailid</td>
+            <td>@item.Mobileno</td>
+            <td>@item.Department</td>
+            <td>
+                <a data-value="@item.UserName"
+                   href="javascript:void(0)" class="btnEdit">Edit</a>
+            </td>
+        </tr>
+
+        }
+    </tbody>
+</table>
+
 
 

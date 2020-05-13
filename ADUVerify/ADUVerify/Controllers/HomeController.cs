@@ -7,14 +7,186 @@ using System.DirectoryServices.AccountManagement;
 using System.DirectoryServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using ADUVerify.Models;
+using System.DirectoryServices.ActiveDirectory;
 
 namespace ADUVerify.Controllers
 {
     public class HomeController : Controller
     {
+        // NetBIOS name of domain. E.g. CONTOSO
+        string domainName = "mylab.local";
+        // Full distinguished name of OU to create user in. E.g. OU=Users,OU=Perth,DC=Contoso,DC=com
+        string userOU = "OU=IT,OU=kakinadda,OU=hyderabad,DC=mylab,DC=local";
+
+        string userOU_root = "OU=hyderabad,DC=mylab,DC=local";
+
+        List<SelectListItem> ObjList;
+
+        List<SelectListItem> ObjSubList;
+
+        List<SelectListItem> ObjGroups;
+
+        List<SelectListItem> ObjUsers;
         public ActionResult Index()
         {
+            loadDefaultValues();
             return View();
+        }
+
+        public void loadDefaultValues()
+        {
+            //Creating generic list
+            ObjList = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Hyderabad", Value = "OU=IT,OU=kakinadda,OU=hyderabad,DC=mylab,DC=local" },
+                new SelectListItem { Text = "Pune", Value = "2" },
+                new SelectListItem { Text = "Mumbai", Value = "3" },
+                new SelectListItem { Text = "Delhi", Value = "4" },
+
+            };
+
+            //Creating generic list
+            ObjSubList = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "HR", Value = "HR" },
+                new SelectListItem { Text = "Finance", Value = "2" },
+                new SelectListItem { Text = "IT", Value = "3" },
+                new SelectListItem { Text = "Operations", Value = "4" },
+
+            };
+
+            //Creating generic list
+            getUsers();
+            getGroups();
+            //Creating generic list
+            //Assigning generic list to ViewBag
+            ViewBag.Locations = new SelectList(ObjList, "Value", "Text");
+            ViewBag.SubLocations = new SelectList(ObjSubList, "Value", "Text");
+            ViewBag.users = new SelectList(ObjUsers, "Value", "Text");
+            ViewBag.groups = new SelectList(ObjGroups, "Value", "Text");
+        }
+        public ActionResult Completed()
+        {
+            return View();
+        }
+
+        public void AddUserToGroup(string userId, string groupName)
+        {
+            try
+            {
+                using (PrincipalContext pc = new PrincipalContext(ContextType.Domain, domainName))
+                {
+                    GroupPrincipal group = GroupPrincipal.FindByIdentity(pc, groupName);
+                    group.Members.Add(pc, IdentityType.UserPrincipalName, userId);
+                    group.Save();
+                }
+            }
+            catch (System.DirectoryServices.DirectoryServicesCOMException E)
+            {
+                //doSomething with E.Message.ToString(); 
+
+            }
+        }
+
+        public void RemoveUserFromGroup(string userId, string groupName)
+        {
+            try
+            {
+                using (PrincipalContext pc = new PrincipalContext(ContextType.Domain, domainName))
+                {
+                    GroupPrincipal group = GroupPrincipal.FindByIdentity(pc, groupName);
+                    group.Members.Remove(pc, IdentityType.UserPrincipalName, userId);
+                    group.Save();
+                }
+            }
+            catch (System.DirectoryServices.DirectoryServicesCOMException E)
+            {
+                //doSomething with E.Message.ToString(); 
+
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Index(CreateUser model)
+        {
+           
+
+            // Source: http://stackoverflow.com/a/2305871
+            using (var pc = new PrincipalContext(ContextType.Domain, domainName, userOU))
+            {
+                using (var up = new UserPrincipal(pc))
+                {
+                    // Create username and display name from firstname and lastname
+                    var userName = model.FirstName + "." + model.LastName;
+                    var displayName = model.FirstName + " " + model.LastName;
+                    // In a real scenario a randomised password would be preferred
+                    var password = model.Password;
+
+                    // Set the values for new user account
+
+                    up.Name = displayName;
+                    up.DisplayName = displayName;
+                    up.GivenName = model.FirstName;
+                    up.Surname = model.LastName;
+                    up.SamAccountName = model.UserName;
+                    up.EmailAddress = model.Emailid;
+                    up.UserPrincipalName = model.UserName;
+                    up.VoiceTelephoneNumber = model.Mobileno;
+                  
+                    up.SetPassword(password);
+                    up.Enabled = true;
+                    up.PasswordNeverExpires = true;
+
+                    try
+                    {
+                        // Attempt to save the account to AD
+                        up.Save();
+
+                        // apped groups
+                        foreach (var _group in model.groups)
+                        {
+                            if(_group!=null)
+                            AddUserToGroup(model.UserName, _group);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        // Display exception(s) within validation summary
+                        loadDefaultValues();
+                        ModelState.AddModelError("", "Exception creating user object. " + e);
+                        return View(model);
+                    }
+
+                    // Add the department to the newly created AD user
+                    // Get the directory entry object for the user
+                    DirectoryEntry de = up.GetUnderlyingObject() as DirectoryEntry;
+                    // Set the department property to the value entered by the user
+                   
+                     
+                    de.Properties["department"].Value = model.Department;
+                    if (model.ReportingManager != null)
+                       de.Properties["manager"].Value = "CN=" + model.ReportingManager + ","+ userOU;
+                    //int val = (int)de.Properties["userAccountControl"].Value;
+                   // de.Properties["userAccountControl"].Value = val & ~0x2;
+                    //de.Invoke("SetPassword", new object[] { model.Password });
+                    try
+                    {
+                        // Try to commit changes
+                        de.CommitChanges();
+                    }
+                    catch (Exception e)
+                    {
+                        // Display exception(s) within validation summary
+                        loadDefaultValues();
+                        ModelState.AddModelError("", "Exception adding manager. " + e);
+                        return View(model);
+                    }
+                }
+            }
+
+            // Redirect to completed page if successful
+            return RedirectToAction("Completed");
         }
 
         public ActionResult About()
@@ -36,7 +208,7 @@ namespace ADUVerify.Controllers
 
            
 
-            DirectoryEntry ouEntry = new DirectoryEntry("LDAP://OU=hyderabad,DC=mylab,DC=local");
+            DirectoryEntry ouEntry = new DirectoryEntry(userOU);
 
             
                 try
@@ -63,75 +235,107 @@ namespace ADUVerify.Controllers
            
             return View();
         }
-        
-
-        [HttpGet]
-
-        public ActionResult ValidateADUser(string Uname, string Pwd)
+        public ActionResult ValidateADUser()
         {
 
-            if (Uname == null)
+           
+                return View();
+           
+
+        }
+        [HttpPost]
+
+        public ActionResult ValidateADUser(CreateUser model)
+        {
+
+            if (model.UserName == null)
             {
                 ViewBag.Message = @"Plz pass paramerters to this url like : [domainurl]/ValidateADUser?uname=xxxx&pwd=xxxx";
                 return View();
             }
             bool isValid = false;
-
-
-            using (DirectoryEntry adsEntry = new DirectoryEntry("LDAP://OU=hyderabad,DC=mylab,DC=local", Uname, Pwd))
-            {
-                using (DirectorySearcher adsSearcher = new DirectorySearcher(adsEntry))
+            String Uname = model.UserName;
+            String Pwd = model.Password;
+            
+                using (PrincipalContext pc = new PrincipalContext(ContextType.Domain, domainName))
                 {
-                    //adsSearcher.Filter = "(&(objectClass=user)(objectCategory=person))";
-                    adsSearcher.Filter = "(sAMAccountName=" + Uname + ")";
-
-                    try
-                    {
-                        SearchResult adsSearchResult = adsSearcher.FindOne();
-                        isValid = true;
-
-                        //strAuthenticatedBy = "Active Directory";
-                       // strError = "User has been authenticated by Active Directory.";
-                    }
-                    catch(Exception ex)
-                    {
-                        // Failed to authenticate. Most likely it is caused by unknown user
-                        // id or bad strPassword.
-                       // strError = ex.Message;
-                    }
-                    finally
-                    {
-                        adsEntry.Close();
-                    }
+                    // validate the credentials
+                    isValid = pc.ValidateCredentials(Uname, Pwd);
                 }
-            }
-            // create a "principal context" - e.g. your domain (could be machine, too)
-          /*  using (PrincipalContext pc = new PrincipalContext(ContextType.Domain, "mylab.local"))
-            {
-                // validate the credentials
-                isValid = pc.ValidateCredentials(Uname, Pwd);
-            }*/
+           
             ViewBag.Message = "Your User validation is :" + isValid.ToString();
             return View();
         }
 
+        private void getUsers()
+        {
+
+            ObjUsers = new List<SelectListItem>();
+            
+         using (var context = new PrincipalContext(ContextType.Domain, domainName, userOU))
+            {
+                using (var searcher = new PrincipalSearcher(new UserPrincipal(context)))
+                {
+                   
+                    foreach (var result in searcher.FindAll())
+                    {
+                        DirectoryEntry de = result.GetUnderlyingObject() as DirectoryEntry;
+    // ViewBag.Message += "</br>First Name: " + de.Properties["givenName"].Value;
+    //   ViewBag.Message += "Last Name : " + de.Properties["sn"].Value;
+   
+                        ObjUsers.Add(new SelectListItem { Text = de.Properties["samAccountName"].Value.ToString(), Value = de.Properties["samAccountName"].Value.ToString() });
+                        //  ViewBag.Message += "User principal name: " + de.Properties["userPrincipalName"].Value;
+
+                    }
+
+                }
+            }
+        }
+        
+        private void getGroups()
+        {
+            ObjGroups = new List<SelectListItem>();
+            PrincipalContext yourOU = new PrincipalContext(ContextType.Domain, domainName, userOU_root);
+            GroupPrincipal findAllGroups = new GroupPrincipal(yourOU, "*");
+            PrincipalSearcher ps = new PrincipalSearcher(findAllGroups);
+            foreach (var group in ps.FindAll())
+            {
+               
+                ObjGroups.Add(new SelectListItem { Text = group.Name.ToString(), Value = group.Name.ToString() });
+            }
+            
+        }
+
         public ActionResult ListADUsers()
         {
-            using (var context = new PrincipalContext(ContextType.Domain, "mylab.local"))
+            using (var context = new PrincipalContext(ContextType.Domain,domainName,userOU))
             {
                 using (var searcher = new PrincipalSearcher(new UserPrincipal(context)))
                 {
                     ViewBag.Message = "<table><tr><th>User Name</th></tr>";
+                    List<CreateUser> userlist = new List<CreateUser>();
+                    //CreateUser
                     foreach (var result in searcher.FindAll())
                     {
                         DirectoryEntry de = result.GetUnderlyingObject() as DirectoryEntry;
                         // ViewBag.Message += "</br>First Name: " + de.Properties["givenName"].Value;
                         //   ViewBag.Message += "Last Name : " + de.Properties["sn"].Value;
+
                         ViewBag.Message += "<tr><td>" + de.Properties["samAccountName"].Value + "</tr></td>";
                         //  ViewBag.Message += "User principal name: " + de.Properties["userPrincipalName"].Value;
-
+                        CreateUser obj = new CreateUser();
+                        obj.UserName = de.Properties["samAccountName"].Value.ToString();
+                        if(de.Properties["mail"].Value != null)
+                        obj.Emailid = de.Properties["mail"].Value.ToString();
+                        if (de.Properties["telephoneNumber"].Value != null)
+                            obj.Mobileno = de.Properties["telephoneNumber"].Value.ToString();
+                        if (de.Properties["department"].Value != null)
+                            obj.Department = de.Properties["department"].Value.ToString();
+                        obj.FirstName = de.Properties["displayName"].Value.ToString();
+                        userlist.Add(obj);
                     }
                     ViewBag.Message += "</table>";
+                    ViewBag.userlist = userlist;
                 }
             }
             return View();
@@ -139,7 +343,7 @@ namespace ADUVerify.Controllers
 
         public ActionResult ListADGroups()
         {
-            string Uname = "narasimha";
+            string Uname = "user.start";
             if (Uname == null)
             {
                // ViewBag.Message = @"Plz pass paramerters to this url like : [domainurl]/getADGroupsByUser?uname=xxxx";
@@ -148,7 +352,7 @@ namespace ADUVerify.Controllers
 
             try
             {
-                ViewBag.Message = GetAdGroupsForUser22(Uname, "mylab.local");
+                ViewBag.Message = GetAdGroupsForUser22(Uname, domainName);
 
                 if (ViewBag.Message.Count == 0)
                 {
@@ -181,7 +385,7 @@ namespace ADUVerify.Controllers
 
         public ActionResult CreateADGroups(string _Groupname)
         {
-            using (var context = new PrincipalContext(ContextType.Domain, "mylab.local"))
+            using (var context = new PrincipalContext(ContextType.Domain, domainName, userOU))
             {
                 using (var searcher = new PrincipalSearcher(new UserPrincipal(context)))
                 {
@@ -214,7 +418,7 @@ namespace ADUVerify.Controllers
             ViewBag.message = Gname + " created successfully";
 
 
-            DirectoryEntry ouEntry = new DirectoryEntry("LDAP://OU=hyderabad,DC=mylab,DC=local");
+            DirectoryEntry ouEntry = new DirectoryEntry(userOU);
 
 
             try
@@ -264,7 +468,7 @@ namespace ADUVerify.Controllers
 
             try
             {
-                ViewBag.Message = GetAdGroupsForUser2(Uname, "mylab.local");
+                ViewBag.Message = GetAdGroupsForUser2(Uname,domainName);
             }
             catch { ViewBag.Message = "user not found";  }
 
@@ -303,7 +507,7 @@ namespace ADUVerify.Controllers
        
             
              // Usage: GetAdGroupsForUser2("domain\user") or GetAdGroupsForUser2("user","domain")
-        public static List<string> GetAdGroupsForUser22(string userName, string domainName = null)
+        public  List<string> GetAdGroupsForUser22(string userName, string domainName = null)
         {
             var result = new List<string>();
 
@@ -313,9 +517,9 @@ namespace ADUVerify.Controllers
                 userName = userName.Split(new char[] { '\\', '/' })[1];
             }
 
-            using (PrincipalContext domainContext = new PrincipalContext(ContextType.Domain, domainName))
+            using (PrincipalContext domainContext = new PrincipalContext(ContextType.Domain, domainName,userOU))
             using (UserPrincipal user = UserPrincipal.FindByIdentity(domainContext, userName))
-            using (var searcher = new DirectorySearcher(new DirectoryEntry("LDAP://OU=hyderabad,DC=mylab,DC=local")))
+            using (var searcher = new DirectorySearcher(new DirectoryEntry(userOU)))
             {
                 searcher.Filter = String.Format("(&(objectCategory=group))", user.DistinguishedName);
                 searcher.SearchScope = SearchScope.Subtree;
@@ -330,7 +534,7 @@ namespace ADUVerify.Controllers
         }
         
         // Usage: GetAdGroupsForUser2("domain\user") or GetAdGroupsForUser2("user","domain")
-        public static List<string> GetAdGroupsForUser2(string userName, string domainName = null)
+        public  List<string> GetAdGroupsForUser2(string userName, string domainName = null)
         {
             var result = new List<string>();
 
@@ -340,7 +544,7 @@ namespace ADUVerify.Controllers
                 userName = userName.Split(new char[] { '\\', '/' })[1];
             }
 
-            using (PrincipalContext domainContext = new PrincipalContext(ContextType.Domain, domainName))
+            using (PrincipalContext domainContext = new PrincipalContext(ContextType.Domain, domainName,userOU))
             using (UserPrincipal user = UserPrincipal.FindByIdentity(domainContext, userName))
             using (var searcher = new DirectorySearcher(new DirectoryEntry("LDAP://" + domainContext.Name)))
             {
@@ -396,10 +600,12 @@ namespace ADUVerify.Controllers
             return View();
         }
 
+
+
               public ActionResult getADAccessRules()
         {
             DirectoryEntry entry = new DirectoryEntry(
-            "LDAP://OU=IT,OU=hyderabad,DC=mylab,DC=local",
+            userOU,
             null,
             null,
             AuthenticationTypes.Secure
@@ -414,7 +620,7 @@ namespace ADUVerify.Controllers
                 try
                 {
                 // respective user 
-                PrincipalContext domainContext = new PrincipalContext(ContextType.Domain, "mylab.local");
+                PrincipalContext domainContext = new PrincipalContext(ContextType.Domain, domainName,userOU);
                 GroupPrincipal user = GroupPrincipal.FindByIdentity(domainContext, "developer");
                 var sid = user.Sid;
                
