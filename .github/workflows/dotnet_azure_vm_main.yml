@@ -5,14 +5,10 @@ on: [push]
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: se;f-hosted
     steps:
-      - uses: actions/dotnetverification@v1
-      - name: Setup Nuget.exe
-        uses: warrenbuckley/Setup-Nuget@v1
-      - name: Restore packages
-        run: nuget restore ADUVerify\ADUVerify.sln
-      - name: Setup MSBuild.exe
-        uses: warrenbuckley/Setup-MSBuild@v1
-      - name: Build with MSBuild
-        run: msbuild ADUVerify\ADUVerify.sln -p:configuration=Release
+      - name: checkout
+        uses: actions/checkout@v1
+      - name: Build DotNET35
+        run:  cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\"
+           .\MSBuild.exe $Env:GITHUB_WORKSPACE\ADUVerify\ADUVerify.sln
