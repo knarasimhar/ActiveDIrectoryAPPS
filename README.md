@@ -5,41 +5,41 @@ windows AD(Active directory) screen short for information about each screen
 screenshort 1 :
 ![](images/Screenshot%202020-05-14%20at%2012.09.05%20PM.png)
 
-screenshort 1 :
+screenshort 2 :
 ![](images/Screenshot%202020-05-14%20at%2012.10.14%20PM.png)
 
-screenshort 1 :
+screenshort 3 :
 ![](images/Screenshot%202020-05-14%20at%2012.11.02%20PM.png)
 
-screenshort 1 :
+screenshort 4 :
 ![](images/Screenshot%202020-05-14%20at%2012.09.05%20PM.png)
 
-screenshort 1 :
+screenshort 5 :
 ![](images/Screenshot%202020-05-08%20at%2012.11.14%20PM.png)
 
-screenshort 1 :
+screenshort 6 :
 ![](images/Screenshot%202020-05-08%20at%2012.12.12%20PM.png)
 
-screenshort 1 :
+screenshort 7 :
 ![](images/Screenshot%202020-05-08%20at%2012.13.24%20PM.png)
 
-screenshort 1 :
+screenshort 8 :
 ![](images/Screenshot%202020-05-14%20at%2012.13.42%20PM.png)
 
-screenshort 1 :
+screenshort 9 :
 ![](images/Screenshot%202020-05-14%20at%2012.14.28%20PM.png)
 
-screenshort 1 :
+screenshort 10 :
 ![](images/Screenshot%202020-05-14%20at%2012.15.01%20PM.png)
 
-screenshort 1 :
+screenshort 11:
 ![](images/Screenshot%202020-05-14%20at%2012.17.20%20PM.png)
 
-screenshort 1 :
+screenshort 12:
 ![](images/Screenshot%202020-05-08%20at%2012.17.33%20PM.png)
 
-screenshort 1 :
+screenshort 13:
 ![](images/Screenshot%202020-05-08%20at%2012.17.44%20PM.png)
 
-screenshort 1 :
+screenshort 14:
 ![](images/Screenshot%202020-05-08%20at%2012.17.54%20PM.png)
