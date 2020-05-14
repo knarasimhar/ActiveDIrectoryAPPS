@@ -13,6 +13,32 @@ screenshort:
 
 Below are the Link details:
 
+<b>UI Screen 1</b> : For Creating the Active directory user include Groups,manager and department updates
+
+Url as : http://[domainurl]/ADUVerify/home/index
+
+screenshort:
+
+![](images/Screenshot%202020-05-14%20at%2011.23.54%20AM.png)
+
+<b>UI Screen 2</b> : For List the all users based on OU configuration
+
+Url as : http://[domainurl]/ADUVerify/Home/ListADUsers
+
+screenshort:
+
+![](images/Screenshot%202020-05-14%20at%2011.39.59%20AM.png)
+
+<b>UI Screen 3</b> : For verifing the user in Active directory
+
+Url as : http://[domainurl]/ADUVerify/Home/ValidateADUser
+
+screenshort:
+
+![](images/Screenshot%202020-05-14%20at%2011.41.37%20AM.png)
+
+
+
 <b>API 1</b> : For list all users from Active directory 
 
 Url as : http://[domainurl]/ADUVerify/Home/ListADUsers
