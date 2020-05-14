@@ -15,4 +15,4 @@ jobs:
       - name: Run MS build again
         run: |
            cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\"
-           .\MSBuild.exe $Env:GITHUB_WORKSPACE\pathtoyoursolutionorproject
+           .\MSBuild.exe $Env:GITHUB_WORKSPACE\ActiveDIrectoryAPPS\ADUVerify\ADUVerify.sln
