@@ -9,7 +9,10 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v1
-      - name: Build DotNET35
+      - name: Build DotNET35 with path
         run:  cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\"
-      - name: Run MS build
-        run: C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe /home/runner/work/ActiveDIrectoryAPPS/ActiveDIrectoryAPPS/ADUVerify/ADUVerify.sln
+              .\MSBuild.exe  /home/runner/work/ActiveDIrectoryAPPS/ActiveDIrectoryAPPS/ADUVerify/ADUVerify.sln
+      - name: Run MS build again
+        run: |
+           cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\"
+           .\MSBuild.exe $Env:GITHUB_WORKSPACE\pathtoyoursolutionorproject
