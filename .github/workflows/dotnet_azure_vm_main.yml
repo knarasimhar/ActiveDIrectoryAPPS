@@ -5,7 +5,7 @@ on: [push]
 
 jobs:
   build:
-    runs-on: se;f-hosted
+    runs-on: self-hosted
     steps:
       - name: checkout
         uses: actions/checkout@v1
