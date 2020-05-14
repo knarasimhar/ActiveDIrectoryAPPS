@@ -8,7 +8,7 @@ jobs:
     runs-on: windows-2019
     steps:
       - name: checkout
-        uses: actions/ActiveDirectoryAPP@v1
+        uses: actions/dotnet_azure_vm_main@v1
       - name: Build DotNET35
         run: cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\"
            .\MSBuild.exe /home/runner/work/ActiveDIrectoryAPPS/ActiveDIrectoryAPPS
