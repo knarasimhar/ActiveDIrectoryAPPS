@@ -1,5 +1,7 @@
 ADUVerify application is userd for windows AD(Active directory) user List/Login validate/Creaete windows users
 
+<b>Active Directory info details</b> ref link: https://github.com/knarasimhar/ActiveDIrectoryAPPS/blob/master/README.md
+
 <b>prerequisesions</b>:
 windows NT server,
 .net framework 4.5 above,
