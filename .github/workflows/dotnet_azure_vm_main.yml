@@ -1,18 +1,10 @@
-name: NetFrameWork.Legacy.CI
-
-on: [push]
- 
 jobs:
   build:
-    runs-on: windows-latest
-
+    runs-on: windows-2019
     steps:
-    - uses: actions/checkout@v1
-    - name: Setup Nuget.exe
-      uses: warrenbuckley/Setup-Nuget@v1
-    - name: Restore packages
-      run: nuget restore aduverify
-    - name: Setup MSBuild.exe
-      uses: warrenbuckley/Setup-MSBuild@v1
-    - name: Build with MSBuild
-      run: msbuild  YOUR_SOLUTION_NAME -p:Configuration=Release
+      - name: checkout
+        uses: actions/checkout@v1
+      - name: Build DotNET35
+        run: |
+           cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
+           .\MSBuild.exe $Env:GITHUB_WORKSPACE\pathtoyoursolutionorproject
