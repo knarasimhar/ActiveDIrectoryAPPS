@@ -11,4 +11,4 @@ jobs:
         uses: actions/checkout@v1
       - name: Build DotNET35
         run:  cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\"
-           .\MSBuild.exe \github\workspace\ADUVerify\ADUVerify.sln
+             .\MSBuild.exe /home/runner/work/ADUVerify/ADUVerify.sln
