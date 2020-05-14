@@ -66,7 +66,7 @@ screenshort 21:
 ![](images/Screenshot%202020-05-14%20at%2012.19.55%20PM.png)
 
 screenshort 22:
-![](images/Screenshot%202020-05-14%20at%2012.20.1120PM.png)
+![](images/Screenshot%202020-05-14%20at%2012.20.115%20PM.png)
 
 
 screenshort 23 :
