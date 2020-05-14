@@ -79,8 +79,10 @@ Windows server will give respective output base on username and password
 
 note: Password policy should follow as windows authentication [one cap letter and lengh should be more 8 chars]
 
+<b>Advanced APIS</b>: For user advance details like Group,permission and delegtion control enable in remote windows NT server  Active directory 
+
 screenshort:
-![](images/Screenshot%202020-05-08%20at%202.10.41%20PM.png)
+![](images/Screenshot%202020-05-14%20at%2011.56.19%20AM.png)
 
 Ignore below:
 
