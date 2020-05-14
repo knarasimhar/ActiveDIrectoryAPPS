@@ -12,4 +12,4 @@ jobs:
       - name: Build DotNET35
         run:  cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\"
       - name: Run MS build
-        run: .\MSBuild.exe /home/runner/work/ADUVerify/ADUVerify.sln
+        run: C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe /home/runner/work/ActiveDIrectoryAPPS/ActiveDIrectoryAPPS/ADUVerify/ADUVerify.sln
