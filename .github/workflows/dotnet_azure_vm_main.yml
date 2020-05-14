@@ -1,13 +1,18 @@
 
 name: publish dotnet_azure_vm_main
 
-on: push
+on: [push]
 
 jobs:
   build:
     runs-on: self-hosted
     steps:
-      - name: checkout
-        uses: actions/dotnetverification@v1
-      - name: Build DotNET35
-        run: dotnet build --configuration Release
+      - uses: actions/dotnetverification@v1
+      - name: Setup Nuget.exe
+        uses: warrenbuckley/Setup-Nuget@v1
+      - name: Restore packages
+        run: nuget restore ADUVerify\ADUVerify.sln
+      - name: Setup MSBuild.exe
+        uses: warrenbuckley/Setup-MSBuild@v1
+      - name: Build with MSBuild
+        run: msbuild ADUVerify\ADUVerify.sln -p:configuration=Release
