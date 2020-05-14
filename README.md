@@ -11,12 +11,13 @@ screenshort 2 :
 screenshort 3 :
 ![](images/Screenshot%202020-05-14%20at%2012.11.02%20PM.png)
 
+repeated
 screenshort 4 :
 ![](images/Screenshot%202020-05-14%20at%2012.09.05%20PM.png)
-
+repeated
 screenshort 5 :
 ![](images/Screenshot%202020-05-14%20at%2012.10.14%20PM.png)
-
+repeated
 screenshort 6 :
 ![](images/Screenshot%202020-05-14%20at%2012.11.02%20PM.png)
 
