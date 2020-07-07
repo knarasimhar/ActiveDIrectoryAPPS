@@ -11,14 +11,16 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Mvc;
+using System.Data;
+
 
 namespace ADUVerify.Controllers
-{ 
+{
     [EnableCors(origins: "http://localhost:44359/", headers: "*", methods: "*")]
     public class AduVerifyController : ApiController
     {
 
-       
+
         String strSiteURL = "http://sharepoint2/sites/teamsiteex/PipFlowSite", strUSER = "spuser2", strPWD = "User@123#", strResponse = "";
         string domainName = "saathispdt.com";
         // Full distinguished name of OU to create user in. E.g. OU=Users,OU=Perth,DC=Contoso,DC=com
@@ -187,7 +189,6 @@ namespace ADUVerify.Controllers
         }
 
         private DirectoryEntry createDirectoryEntry()
-
         {
             // create and return new LDAP connection with desired settings
 
@@ -200,54 +201,8 @@ namespace ADUVerify.Controllers
             return ldapConnection;
 
         }
-        //[System.Web.Http.Route("api/AduVerify/ADUpdateUser")]
-        //[System.Web.Http.HttpGet,System.Web.Http.HttpPost]
-        //public HttpResponseMessage ADUpdateUser(string OU, string SubOU, string UserName, string Password, string Mobileno, string Emailid, string groups, string FirstName, string LastName, string Department, string ReportingManager, string State)
-        //{
-        //    try
-        //    {
-
-        //        DirectoryEntry myLdapConnection = createDirectoryEntry();
-        //        DirectorySearcher search = new DirectorySearcher(myLdapConnection);
-        //        search.Filter = "(cn=" + UserName + ")";
-
-        //        search.PropertiesToLoad.Add("title");
-        //        SearchResult result = search.FindOne();
-        //        if (result != null)
-
-        //        {
-
-        //            // create new object from search result
-        //            DirectoryEntry entryToUpdate = result.GetDirectoryEntry();
-        //            // show existing title
-        //            if (Emailid != null)
-        //                entryToUpdate.Properties["mail"].Value = Emailid;
-        //            if (Mobileno != null)
-        //                entryToUpdate.Properties["telephoneNumber"].Value = Mobileno;
-
-
-        //            entryToUpdate.CommitChanges();
-
-
-
-        //        }
-        //        else
-        //            return getSuccessmessage("user not found");
-
-
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return getErrormessage(ex.Message);
-        //    }
-
-        //    return getSuccessmessage("success");      
-
-        //}
         [System.Web.Http.Route("api/AduVerify/ADUpdateUser")]
         [System.Web.Http.HttpGet, System.Web.Http.HttpPost]
-
         public HttpResponseMessage ADUpdateUser(CreateUser model)
         {
             try
@@ -255,9 +210,11 @@ namespace ADUVerify.Controllers
 
                 DirectoryEntry myLdapConnection = createDirectoryEntry();
                 DirectorySearcher search = new DirectorySearcher(myLdapConnection);
-                search.Filter = "(cn=" + model.UserName + ")";
+                search.Filter = "(sAMAccountName="  + model.UserName + ")";
 
-                search.PropertiesToLoad.Add("title");
+                search.PropertiesToLoad.Add("mail");
+                search.PropertiesToLoad.Add("telephoneNumber");
+                
                 SearchResult result = search.FindOne();
                 if (result != null)
 
@@ -290,8 +247,8 @@ namespace ADUVerify.Controllers
 
             return getSuccessmessage("success");
 
-
         }
+      
         public void AddUserToGroup(string userId, string groupName)
         {
             try
